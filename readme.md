@@ -2,7 +2,7 @@
 
 * Spencer Bryngelson and Hyesoon Kim
 
-## What we are doing
+## Step 0: What we are doing
 
 * Testing different architectures for a specific computational method (FVM)
   * Method: Finite volume method (solves hyperbolic PDEs that are conservation laws)
