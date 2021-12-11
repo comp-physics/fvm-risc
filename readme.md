@@ -35,7 +35,7 @@ _Update:_ some references specific to **Cloverleaf** [are here](clover.md)
     * Optimization: Meaning tiling, and other algorithmic optimizations one might make for a given architecture, or just in genereal
 
 
-## Step 1: Identify benchmarks
+## Step 1: Identify benchmarks (STATUS: Complete)
 
 * Need to identify codebases that we will use for benchmarking/testing (one or two or three), "mini-apps" are often good for this
   * Some examples in MSTeams message
@@ -59,7 +59,11 @@ _Update:_ some references specific to **Cloverleaf** [are here](clover.md)
 
   * Before spending *too* much time on any one code, make sure you can actually compile it and run it on some standard hardware (your laptop, Phoenix, etc.) 
 
-## Step 1.5: Document them
+**Update: This step is done. 
+Cloverleaf has been selected as option 1, in particular the Cpp port from the Bistol HPC group. 
+More documentation [here](clover.md)** 
+
+## Step 1.5: Document them (STATUS: Mostly complete)
 
 Document
 * what each benchmark is capable of
@@ -67,16 +71,21 @@ Document
 * what methods it has in it
 * how "complicated it is"
 
-## Step 2: Run and optimize benchmarks 
+**Update: Cloverleaf documentation [here](clover.md)** 
+
+## Step 2: Run (STATUS: ?)
 
 Run
 * Run each benchmark and each method within each benchmark using appropriate compilers on different hardware 
   * Intel CPU gets Intel compiler, for example
   * Nvidia GPU gets Cuda compiler
 
+## Step 3: Optimization levels  (STATUS: ?)
+
 Optimize
 * Identify optimization opportunities for the different codes
   * This will be partially hardware dependent (e.g., GPUs vs. x86 vs. ARM would likely see some different optimizations)
 * Implement some of them and see what happens
+
 
 
