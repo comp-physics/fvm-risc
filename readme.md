@@ -73,19 +73,28 @@ Document
 
 **Update: Cloverleaf documentation [here](clover.md)** 
 
-## Step 2: Run (STATUS: ?)
+## Step 2: Run (STATUS: Pending)
 
-Run
 * Run each benchmark and each method within each benchmark using appropriate compilers on different hardware 
   * Intel CPU gets Intel compiler, for example
   * Nvidia GPU gets Cuda compiler
 
-## Step 3: Optimization levels  (STATUS: ?)
+**Update: Start with ARM? 
+Check the HW_TEAM channel in the MS Teams team. 
+It looks like Hyesoon's students are also going to be running the code themselves in some of these places. 
+According to Jeff Young the ARM computer should have a few different compiler options, including gcc and Cray at the very least.
+Please ping the Slack channel on novel arch. if you have questions.**
 
-Optimize
+## Step 3: Optimization levels  (STATUS: Pending)
+
+General
 * Identify optimization opportunities for the different codes
   * This will be partially hardware dependent (e.g., GPUs vs. x86 vs. ARM would likely see some different optimizations)
 * Implement some of them and see what happens
 
+Cloverleaf
+* A tiling parameter called `tiles_per_chunk` is available
+* Specific, appropriate compiler flags options can be extracted from the relevant repositories and papers [here](clover.md)
+  * This is particularly important for ARM I believe
 
 
