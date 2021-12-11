@@ -85,7 +85,7 @@ It looks like Hyesoon's students are also going to be running the code themselve
 According to Jeff Young the ARM computer should have a few different compiler options, including gcc and Cray at the very least.
 Please ping the Slack channel on novel arch. if you have questions.**
 
-## Step 3: Optimization levels  (STATUS: Pending)
+## Step 3: Optimization (STATUS: Pending)
 
 General
 * Identify optimization opportunities for the different codes
@@ -96,5 +96,10 @@ Cloverleaf
 * A tiling parameter called `tiles_per_chunk` is available
 * Specific, appropriate compiler flags options can be extracted from the relevant repositories and papers [here](clover.md)
   * This is particularly important for ARM I believe
+
+**If this step is completed sooner rather than later, we can do one of the following
+1. Implement our own code-level optimizations
+2. Move onto implementing a variation of the FVM in Cloverleaf and test it
+**
 
 
