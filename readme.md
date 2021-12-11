@@ -2,6 +2,8 @@
 
 * Spencer Bryngelson and Hyesoon Kim
 
+_Update:_ some references specific to **Cloverleaf** [are here](clover.md)
+
 ## Step 0: What we are doing
 
 * Testing different architectures for a specific computational method (FVM)
@@ -37,13 +39,13 @@
 
 * Need to identify codebases that we will use for benchmarking/testing (one or two or three), "mini-apps" are often good for this
   * Some examples in MSTeams message
+    * (Selected) https://uk-mac.github.io/CloverLeaf/
     * https://github.com/adamdempsey90/fvm
-    * https://uk-mac.github.io/CloverLeaf/
     * https://uk-mac.github.io/TeaLeaf/
     * https://asc.llnl.gov/codes/proxy-apps/lulesh
     * https://github.com/lanl/PENNANT
     * https://github.com/Mantevo/miniFE
-    * CLAWPACK!!!! https://github.com/orgs/clawpack/repositories
+    * https://github.com/orgs/clawpack/repositories
 
   * Requirements: That they can actually run on the hardware we have access to. 
     * Best case: without too much work on our part
