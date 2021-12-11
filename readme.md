@@ -97,9 +97,10 @@ Cloverleaf
 * Specific, appropriate compiler flags options can be extracted from the relevant repositories and papers [here](clover.md)
   * This is particularly important for ARM I believe
 
-**If this step is completed sooner rather than later, we can do one of the following
+### Next
+
+**If this step is completed sooner rather than later, we can do one of the following**
 1. Implement our own code-level optimizations
 2. Move onto implementing a variation of the FVM in Cloverleaf and test it
-**
 
 
