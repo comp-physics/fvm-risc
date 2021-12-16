@@ -3,6 +3,7 @@
 * Spencer Bryngelson and Hyesoon Kim
 
 _Update:_ some references specific to **Cloverleaf** [are here](clover.md)
+_Update:_ some references specific to **MFC** [are here](mfc.md)
 
 ## Step 0: What we are doing
 
