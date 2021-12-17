@@ -21,8 +21,9 @@ Projects
 
 ## How to run 
 
-For [this](https://github.com/UoB-HPC/cloverleaf_openmp_target) one I was able to run on
+For [this](https://github.com/UoB-HPC/cloverleaf_openmp_target) one 
 
+Works on
 * Expanse
 	* `srun --partition=debug --account=cit193 --pty --nodes=1 --ntasks-per-node=64 -t 00:30:00 --wait=0 --export=ALL /bin/bash`
 	* `git clone https://github.com/UoB-HPC/cloverleaf_openmp_target.git`
@@ -33,19 +34,19 @@ For [this](https://github.com/UoB-HPC/cloverleaf_openmp_target) one I was able t
 	* `cmake --build build --target clover_leaf --config Release`
 	* `export OMPI_COMM_WORLD_RANK=0` 
 	* `srun -n 1 ./build/clover_leaf --file InputDecks/clover_bm16_short.in`
-
 * It works on Summit as well
 * However, I don't think it has the `tiles` parameters
+* Doesn't run on Bridges2 (`cmake` too old?)
 
 
-For [this one](https://github.com/UoB-HPC/CloverLeaf) using gcc, openmpi, cuda
-* openmp
+For [this one](https://github.com/UoB-HPC/CloverLeaf) using gcc, openmpi, cuda, and openmp
 
+Works on 
 * Bridges2
 	* `interact --ntasks-per-node=1 --partition RM-shared -t 01:00:00`
 	* `module load allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1` 
 	* `make COMPILER=GNU USE_OPENMP=1`
-	* `srun -n 1 mpirun -n 1 ./clover_leaf
+	* `mpirun -n 1 ./clover_leaf
 
 
 
