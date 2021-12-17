@@ -57,5 +57,3 @@ Bridges2
 * Get an interactive CPU node: `interact --ntasks-per-node=1 --partition RM-shared -t 01:00:00`
 then `mpirun -n 1 simulation`
 
-
-

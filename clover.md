@@ -36,3 +36,21 @@ For [this](https://github.com/UoB-HPC/cloverleaf_openmp_target) one I was able t
 
 * It works on Summit as well
 * However, I don't think it has the `tiles` parameters
+
+
+For [this one](https://github.com/UoB-HPC/CloverLeaf) using gcc, openmpi, cuda
+* openmp
+
+* Bridges2
+	* `interact --ntasks-per-node=1 --partition RM-shared -t 01:00:00`
+	* `module load allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1` 
+	* 
+
+* Some file differences
+
+```
+-#include "../kernels/update_tile_halo_kernel.c"
++#include "../kernels/update_tile_halo_kernel.cc"
+```
+
+

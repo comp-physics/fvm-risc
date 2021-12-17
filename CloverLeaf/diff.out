@@ -1,0 +1,53 @@
+diff --git a/adaptors/accelerate.cpp b/adaptors/accelerate.cpp
+index 42337de..6a42a5c 100644
+--- a/adaptors/accelerate.cpp
++++ b/adaptors/accelerate.cpp
+@@ -22,7 +22,7 @@ void accelerate_adaptor()
+ 
+ #if defined(USE_OPENMP) || defined(USE_OMPSS)
+ 
+-#include "../kernels/accelerate_kernel.c"
++#include "../kernels/accelerate_kernel.cc"
+ 
+ void accelerate_adaptor()
+ {
+@@ -166,4 +166,4 @@ void accelerate_adaptor()
+         openclQueue.finish();
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff --git a/adaptors/update_tile_halo.cpp b/adaptors/update_tile_halo.cpp
+index 9c1a5fa..95984fb 100644
+--- a/adaptors/update_tile_halo.cpp
++++ b/adaptors/update_tile_halo.cpp
+@@ -1,7 +1,7 @@
+ 
+ #if defined(USE_OPENMP) || defined(USE_OMPSS)
+ #include "../definitions_c.h"
+-#include "../kernels/update_tile_halo_kernel.c"
++#include "../kernels/update_tile_halo_kernel.cc"
+ 
+ 
+ void update_tile_halo(int* fields, int depth)
+@@ -200,4 +200,4 @@ void update_tile_halo(int* fields, int depth)
+     // TODO
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff --git a/definitions_c.h b/definitions_c.h
+index 4a47dfe..46e2c60 100644
+--- a/definitions_c.h
++++ b/definitions_c.h
+@@ -25,6 +25,8 @@
+ #include "cudadefs.h"
+ #endif
+ 
++
++
+ struct state_type {
+     bool defined;
+     double density,
