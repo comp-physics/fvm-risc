@@ -44,13 +44,8 @@ For [this one](https://github.com/UoB-HPC/CloverLeaf) using gcc, openmpi, cuda
 * Bridges2
 	* `interact --ntasks-per-node=1 --partition RM-shared -t 01:00:00`
 	* `module load allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1` 
-	* 
+	* `make COMPILER=GNU USE_OPENMP=1`
+	* `srun -n 1 mpirun -n 1 ./clover_leaf
 
-* Some file differences
-
-```
--#include "../kernels/update_tile_halo_kernel.c"
-+#include "../kernels/update_tile_halo_kernel.cc"
-```
 
 
