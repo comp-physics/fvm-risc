@@ -19,3 +19,20 @@ Projects
 * https://mantevo.github.io/
 * http://uob-hpc.github.io/
 
+## How to run 
+
+For [this](https://github.com/UoB-HPC/cloverleaf_openmp_target) one I was able to run on
+
+* Expanse
+	* `srun --partition=debug --account=cit193 --pty --nodes=1 --ntasks-per-node=64 -t 00:30:00 --wait=0 --export=ALL /bin/bash`
+	* `git clone https://github.com/UoB-HPC/cloverleaf_openmp_target.git`
+	* `module unload gcc cmake cuda pgi openmpi gpu`
+	* `module load cpu/0.15.4  gcc/9.2.0 openmpi cmake/3.18.2`
+	* `cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Release`
+	* Open `Cmakelists.txt` and remove the offload flag [here](https://github.com/UoB-HPC/cloverleaf_openmp_target/blob/1a61864290c1fa0ab3e1b4501dcb245e2c9f521c/CMakeLists.txt#L132] so that line 132 reads `set(OMP_OFFLOAD_FLAGS )
+	* `cmake --build build --target clover_leaf --config Release`
+	* `export OMPI_COMM_WORLD_RANK=0` 
+	* `srun -n 1 ./build/clover_leaf --file InputDecks/clover_bm16_short.in`
+
+* It works on Summit as well
+* However, I don't think it has the `tiles` parameters
