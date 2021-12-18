@@ -48,6 +48,11 @@ declare -a NAMING_IS_FUN=(
     "GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 cuda/11.1.1 openmpi/4.1.1-gcc8.3.1"
 )
 
+declare -a OPTIMIZATION_LEVELS=(
+    "STANDARD|"
+    "FAST|fast|aocc"
+)
+
 TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64)
 
 idx=0
@@ -59,44 +64,60 @@ for item in "${NAMING_IS_FUN[@]}"; do
     includes="$(echo "$item" | sed "s/|/\n/g" | sed -n 3p)"
     modules="$(echo "$item" | sed "s/|/\n/g" | sed -n 4p)"
 
-    module load "$modules"
+    for optimization_level_item in "${OPTIMIZATION_LEVELS[@]}"; do
+        optimization_level="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 1p)"
+        makefile_target="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 2p)"
+        optimization_modules="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 3p)"
+        BUILD_UUID="$compiler_family-$dependency-$optimization_level"
+        BUILD_DIR="builds/$BUILD_UUID"
 
-    BUILD_UUID="$compiler_family-$dependency"
-    BUILD_DIR="builds/$BUILD_UUID"
+        echo module load --ignore-cache "$modules $optimization_modules"
 
-    mkdir -p "$BUILD_DIR"
+        echo -en "Building $BUILD_DIR..."
 
-    make clean > "$BUILD_DIR/build.log" 2>&1
+        mkdir -p "$BUILD_DIR"
 
-    make -j 4                        \
-         EXTRA_INC="$includes"       \
-         COMPILER="$compiler_family" \
-         "$dependency"=1 >> "$BUILD_DIR/build.log" 2>&1
-    
-    mv clover_leaf "$BUILD_DIR"
+        make clean > "$BUILD_DIR/build.log" 2>&1
 
-    cd "$BUILD_DIR"
+        make $makefile_target -j $(nproc) \
+            EXTRA_INC="$includes"         \
+            COMPILER="$compiler_family"   \
+            "$dependency"=1 >> "$BUILD_DIR/build.log" 2>&1
 
-    for ntilespc in "${TILES_PER_CHUNK_OPTIONS[@]}"; do
-        # Q: How are you going to document this?
-        # A: Yes.
-        echo "$IN_FILE_TEMPLATE" |              \
-             sed s/"\^"/$ntilespc/g > clover.in
+        mv clover_leaf "$BUILD_DIR"
 
-        chmod +x ./clover_leaf
+        cd "$BUILD_DIR"
 
-        # I love finding undocumented features (OCL_SRC_PREFIX)
-        OMP_NUM_THREADS=1 OCL_SRC_PREFIX="../../"   \
-            ./clover_leaf                    2>&1 | \
-            tail -22                                \
-            > "../../results/run-$BUILD_UUID-$ntilespc""t.log"
+        for ntilespc in "${TILES_PER_CHUNK_OPTIONS[@]}"; do
+            RUN_UUID="$BUILD_UUID-$ntilespc""tpc"
 
-        rm clover.in clover.out
+            echo -en "\rRunning $RUN_UUID..."
+
+            # Q: How are you going to document this?
+            # A: Yes.
+            echo "$IN_FILE_TEMPLATE" |              \
+                sed s/"\^"/$ntilespc/g > clover.in
+
+            chmod +x ./clover_leaf
+
+            # I love finding undocumented features (OCL_SRC_PREFIX)
+            export OMP_NUM_THREADS=$(nproc)
+            export OCL_SRC_PREFIX="../../"
+
+            mpirun -v -n 1 -bind-to none  \
+                   ./clover_leaf   2>&1 | \
+                   tail -22               \
+                   > "../../results/run-$RUN_UUID.log"
+
+            rm clover.in clover.out
+        done
+
+        echo -e "\rDone with $BUILD_UUID.                                        "
+
+        cd ../../
+
+        echo module unload "$modules $optimization_modules"
     done
-
-    cd ../../
-
-    module unload "$modules"
 
     idx=$((idx+1))
 done
