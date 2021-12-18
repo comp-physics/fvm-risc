@@ -17,8 +17,8 @@ IN_FILE_TEMPLATE=$(cat <<-END
  state 1 density=0.2 energy=1.0
  state 2 density=1.0 energy=2.5 geometry=rectangle xmin=0.0 xmax=5.0 ymin=0.0 ymax=2.0
 
- x_cells=960
- y_cells=960
+ x_cells=2000
+ y_cells=2000
 
  xmin=0.0
  ymin=0.0
@@ -57,7 +57,7 @@ declare -a OPTIMIZATION_LEVELS=(
     "FAST|fast|aocc"
 )
 
-TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64)
+TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64 128)
 
 idx=0
 for item in "${NAMING_IS_FUN[@]}"; do
