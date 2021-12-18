@@ -126,6 +126,8 @@ for item in "${NAMING_IS_FUN[@]}"; do
     idx=$((idx+1))
 done
 
+tar -zcvf results.tar.gz results/
+
 echo
 echo
 echo "shhh... There's a starman waiting in the sky."
