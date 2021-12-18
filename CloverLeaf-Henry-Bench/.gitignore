@@ -7,3 +7,5 @@
 clover_leaf
 clover_leafc
 *.gch
+builds/
+results/
