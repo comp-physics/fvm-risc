@@ -43,10 +43,14 @@ for used_dir in "${used_dirs[@]}"; do
     mkdir -p "$used_dir"
 done
 
+module load cuda
+
 declare -a NAMING_IS_FUN=(
-    "GNU|USE_OPENCL|-I$CUDA_PATH/include/CL -I$CUDA_PATH/include -L$CUDA_PATH/lib64|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1 nvhpc/21.7"
+    "GNU|USE_OPENCL|-I$CUDA_HOME/include/CL -I$CUDA_HOME/include -L$CUDA_HOME/lib64|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1 nvhpc/21.7"
     "GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 cuda/11.1.1 openmpi/4.1.1-gcc8.3.1"
 )
+
+module unload cuda
 
 declare -a OPTIMIZATION_LEVELS=(
     "STANDARD|"
@@ -71,7 +75,9 @@ for item in "${NAMING_IS_FUN[@]}"; do
         BUILD_UUID="$compiler_family-$dependency-$optimization_level"
         BUILD_DIR="builds/$BUILD_UUID"
 
-        echo module load --ignore-cache "$modules $optimization_modules"
+	# I'm proud of myself
+	module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
+        module load   $modules $optimization_modules
 
         echo -en "Building $BUILD_DIR..."
 
@@ -115,8 +121,6 @@ for item in "${NAMING_IS_FUN[@]}"; do
         echo -e "\rDone with $BUILD_UUID.                                        "
 
         cd ../../
-
-        echo module unload "$modules $optimization_modules"
     done
 
     idx=$((idx+1))
