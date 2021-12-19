@@ -6,7 +6,7 @@ CC_CUDA_CLANG = clang++
 MPI_CC_ = mpic++
 
 
-FLAGS_GNU = -std=c++11 -Wall -Wpedantic -g -Wno-unknown-pragmas -O3 -march=native -lm
+FLAGS_GNU = -std=c++11 -Wall -Wpedantic -g -O3 -march=native -lm
 FLAGS_INTEL = -std=c++11 -O3 -g -restrict -march=native -fp-model strict
 # FLAGS_INTEL = -std=c++11 -O3 -ipo -restrict -xMIC-AVX512 -no-prec-div -fno-alias
 # FLAGS_INTEL = -std=c++11 -O3 -ipo -restrict -no-prec-div -fno-alias

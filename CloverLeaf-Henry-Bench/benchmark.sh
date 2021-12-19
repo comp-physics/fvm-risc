@@ -44,17 +44,25 @@ for used_dir in "${used_dirs[@]}"; do
 done
 
 module load cuda
+CUDA_INC_LIB="-I$CUDA_HOME/include/CL -I$CUDA_HOME/include -L$CUDA_HOME/lib64"
+module unload cuda
 
 declare -a NAMING_IS_FUN=(
-    "GNU|USE_OPENCL|-I$CUDA_HOME/include/CL -I$CUDA_HOME/include -L$CUDA_HOME/lib64|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1 nvhpc/21.7"
-    "GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 cuda/11.1.1 openmpi/4.1.1-gcc8.3.1"
+# OpenCL w/ Cuda
+    "GCC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
+    "NVHPC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
+    "INTEL|INTEL|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
+    "AMD|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
+# OpenMP
+    "GCC|GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
+    "NVHPC|GNU|USE_OPENMP||allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
+    "INTEL|INTEL|USE_OPENMP||allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
+    "AMD|GNU|USE_OPENMP||allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
 )
-
-module unload cuda
 
 declare -a OPTIMIZATION_LEVELS=(
     "STANDARD|"
-    "FAST|fast|aocc"
+    "FAST|fast|"
 )
 
 TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64 128)
@@ -63,16 +71,17 @@ idx=0
 for item in "${NAMING_IS_FUN[@]}"; do
     # Q: What optimization techniques are these sed calls using?
     # A: Yes.
-    compiler_family="$(echo "$item" | sed "s/|/\n/g" | sed -n 1p)"
-    dependency="$(echo "$item" | sed "s/|/\n/g" | sed -n 2p)"
-    includes="$(echo "$item" | sed "s/|/\n/g" | sed -n 3p)"
-    modules="$(echo "$item" | sed "s/|/\n/g" | sed -n 4p)"
+    compiler_UI_name="$(echo "$item" | sed "s/|/\n/g" | sed -n 1p)"
+    compiler_family="$(echo "$item" | sed "s/|/\n/g" | sed -n 2p)"
+    dependency="$(echo "$item" | sed "s/|/\n/g" | sed -n 3p)"
+    includes="$(echo "$item" | sed "s/|/\n/g" | sed -n 4p)"
+    modules="$(echo "$item" | sed "s/|/\n/g" | sed -n 5p)"
 
     for optimization_level_item in "${OPTIMIZATION_LEVELS[@]}"; do
         optimization_level="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 1p)"
         makefile_target="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 2p)"
         optimization_modules="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 3p)"
-        BUILD_UUID="$compiler_family-$dependency-$optimization_level"
+        BUILD_UUID="$compiler_UI_name-$dependency-$optimization_level"
         BUILD_DIR="builds/$BUILD_UUID"
 
 	# I'm proud of myself
