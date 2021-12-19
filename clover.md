@@ -46,7 +46,7 @@ Works on
 	* `interact --ntasks-per-node=1 --partition RM-shared -t 01:00:00`
 	* `module load allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1` 
 	* `make COMPILER=GNU USE_OPENMP=1`
-	* `mpirun -n 1 ./clover_leaf
+	* `mpirun -n 1 ./clover_leaf`
 
 
 
