@@ -54,15 +54,15 @@ declare -a NAMING_IS_FUN=(
     "INTEL|INTEL|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
     "AMD|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
 # OpenMP
-    "GCC|GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
-    "NVHPC|GNU|USE_OPENMP||allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
-    "INTEL|INTEL|USE_OPENMP||allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
-    "AMD|GNU|USE_OPENMP||allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
+    "GCC|GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1"
+    "NVHPC|GNU|USE_OPENMP||allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7"
+    "INTEL|INTEL|USE_OPENMP||allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4"
+    "AMD|GNU|USE_OPENMP||allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1"
 )
 
 declare -a OPTIMIZATION_LEVELS=(
-    "STANDARD|"
-    "FAST|fast|"
+    "STANDARD"
+    "FAST|fast"
 )
 
 TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64 128)
@@ -80,13 +80,12 @@ for item in "${NAMING_IS_FUN[@]}"; do
     for optimization_level_item in "${OPTIMIZATION_LEVELS[@]}"; do
         optimization_level="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 1p)"
         makefile_target="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 2p)"
-        optimization_modules="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 3p)"
         BUILD_UUID="$compiler_UI_name-$dependency-$optimization_level"
         BUILD_DIR="builds/$BUILD_UUID"
 
 	# I'm proud of myself
 	module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
-        module load   $modules $optimization_modules
+        module load   $modules
 
         echo -en "Building $BUILD_DIR..."
 
