@@ -1,0 +1,22 @@
+Test problem 2 is within    5.0975444e+01 % of the expected solution
+This test is considered NOT PASSED
+Wall clock 3.261032
+First step overhead 0.227202
+Profiler Output                 Time            Percentage
+Timestep              :          0.1802           5.5267
+ideal_gas             :          0.2409           7.3876
+viscosity             :          0.1536           4.7086
+PdV                   :          0.2370           7.2691
+revert                :          0.0399           1.2231
+acceleration          :          0.1064           3.2620
+flux                  :          0.0891           2.7321
+cell_advection        :          0.0018           0.0555
+mom_advection         :          0.7560          23.1824
+reset                 :          0.1708           5.2373
+summary               :          0.0056           0.1725
+visit                 :          0.0000           0.0000
+tile_halo_exchange    :          0.2649           8.1217
+self_halo_exchange    :          0.4384          13.4423
+mpi_halo_exchange     :          0.0002           0.0065
+kernel_total          :          2.6847          82.3276
+the rest              :          0.5763          17.6724
