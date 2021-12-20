@@ -57,13 +57,13 @@ module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
 
 declare -a NAMING_IS_FUN=(
 # OpenCL w/ Cuda
-#    "GCC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
-#    "NVHPC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
-#    "INTEL|INTEL|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
-#    "AMD|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
+    "GCC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
+    "NVHPC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
+    "INTEL|INTEL|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
+    "AMD|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
 # OpenMP
 #    "GCC|GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1"
-    "NVHPC|GNU|USE_OPENMP||allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7"
+#    "NVHPC|GNU|USE_OPENMP||allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7"
 #    "INTEL|INTEL|USE_OPENMP||allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4"
 #    "AMD|GNU|USE_OPENMP||allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1"
 )
@@ -115,8 +115,8 @@ for item in "${NAMING_IS_FUN[@]}"; do
         RANKS_AND_THREAD=("1 1")
 
 #        if [ "$dependency" == "USE_OPENMP" ]; then
-	    RANKS_AND_THREAD+=("1 64")
-	    RANKS_AND_THREAD+=("64 1")
+	    RANKS_AND_THREAD+=("1 128")
+	    RANKS_AND_THREAD+=("128 1")
 #        fi
 
         for ntilespc in "${TILES_PER_CHUNK_OPTIONS[@]}"; do
