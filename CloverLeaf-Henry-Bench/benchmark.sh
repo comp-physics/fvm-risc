@@ -51,7 +51,7 @@ done
 module load cuda
 #CUDA_HOME="$CUDA_PATH"
 CUDA_INC_LIB="-I$CUDA_HOME/include/CL -I$CUDA_HOME/include -L$CUDA_HOME/lib64"
-module unload cuda
+module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
 
 declare -a NAMING_IS_FUN=(
 # OpenCL w/ Cuda
