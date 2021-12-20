@@ -44,6 +44,8 @@ for used_dir in "${used_dirs[@]}"; do
     mkdir -p "$used_dir"
 done
 
+lscpu > results/lscpu.log
+
 #function module() {
 #    echo module "$@"
 #}
@@ -55,19 +57,19 @@ module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
 
 declare -a NAMING_IS_FUN=(
 # OpenCL w/ Cuda
-    "GCC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
-    "NVHPC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
-    "INTEL|INTEL|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
-    "AMD|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
+#    "GCC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1 cuda/11.1.1"
+#    "NVHPC|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7 cuda/11.1.1"
+#    "INTEL|INTEL|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4 cuda/11.1.1"
+#    "AMD|GNU|USE_OPENCL|$CUDA_INC_LIB|allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1 cuda/11.1.1"
 # OpenMP
-    "GCC|GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1"
+#    "GCC|GNU|USE_OPENMP||allocations/1.0 gcc/10.2.0 openmpi/4.1.1-gcc8.3.1"
     "NVHPC|GNU|USE_OPENMP||allocations/1.0 nvhpc/21.7 openmpi/4.0.5-nvhpc21.7"
-    "INTEL|INTEL|USE_OPENMP||allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4"
-    "AMD|GNU|USE_OPENMP||allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1"
+#    "INTEL|INTEL|USE_OPENMP||allocations/1.0 intel/2021.3.0 intelmpi/20.4-intel20.4"
+#    "AMD|GNU|USE_OPENMP||allocations/1.0 aocc/2.3.0 openmpi/4.0.2-clang2.1"
 )
 
 declare -a OPTIMIZATION_LEVELS=(
-    "STANDARD"
+    "STANDARD|"
     "FAST|fast"
 )
 
@@ -86,10 +88,11 @@ for item in "${NAMING_IS_FUN[@]}"; do
     for optimization_level_item in "${OPTIMIZATION_LEVELS[@]}"; do
         optimization_level="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 1p)"
         makefile_target="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 2p)"
-        BUILD_UUID="$compiler_UI_name-$(echo $dependency | sed "s/USE_//g")-$optimization_level"
+	echo $makefile_target
+	BUILD_UUID="$compiler_UI_name-$(echo $dependency | sed "s/USE_//g")-$optimization_level"
         BUILD_DIR="builds/$BUILD_UUID"
 
-	    module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
+	module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
         module load   $modules
 
         echo -en "Building $BUILD_DIR..."
@@ -109,11 +112,12 @@ for item in "${NAMING_IS_FUN[@]}"; do
 
         chmod +x ./clover_leaf
 
-        RANKS_AND_THREAD=("1 $(nproc)")
+        RANKS_AND_THREAD=("1 1")
 
-        if [ "$dependency" == "USE_OPENMP" ]; then
-            RANKS_AND_THREAD+=("$(nproc) 1")
-        fi
+#        if [ "$dependency" == "USE_OPENMP" ]; then
+	    RANKS_AND_THREAD+=("1 64")
+	    RANKS_AND_THREAD+=("64 1")
+#        fi
 
         for ntilespc in "${TILES_PER_CHUNK_OPTIONS[@]}"; do
             for rank_and_thread in "${RANKS_AND_THREAD[@]}"; do
@@ -133,10 +137,8 @@ for item in "${NAMING_IS_FUN[@]}"; do
                 export OMP_NUM_THREADS=$mp_threads
                 export OCL_SRC_PREFIX="../../"
 
-                mpirun -v -n $mpi_ranks -bind-to none  \
-                    ./clover_leaf   2>&1 | \
-                    tail -22               \
-                    > "../../results/run-$RUN_UUID.log"
+		mpirun -v -n $mpi_ranks -bind-to none \
+			./clover_leaf > "../../results/run-$RUN_UUID.log"
 
                 rm clover.in clover.out
             done
@@ -157,3 +159,4 @@ echo
 echo "shhh... There's a starman waiting in the sky."
 echo
 echo 
+
