@@ -1,3 +1,4 @@
+
 echo
 echo
 echo "While you wait, here are some lyrics from Pink Floyd's 'Time':"
@@ -43,7 +44,12 @@ for used_dir in "${used_dirs[@]}"; do
     mkdir -p "$used_dir"
 done
 
+#function module() {
+#    echo module "$@"
+#}
+
 module load cuda
+#CUDA_HOME="$CUDA_PATH"
 CUDA_INC_LIB="-I$CUDA_HOME/include/CL -I$CUDA_HOME/include -L$CUDA_HOME/lib64"
 module unload cuda
 
@@ -65,7 +71,7 @@ declare -a OPTIMIZATION_LEVELS=(
     "FAST|fast"
 )
 
-TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64 128)
+declare -a TILES_PER_CHUNK_OPTIONS=(1 2 4 8 16 32 64 128)
 
 idx=0
 for item in "${NAMING_IS_FUN[@]}"; do
@@ -80,11 +86,10 @@ for item in "${NAMING_IS_FUN[@]}"; do
     for optimization_level_item in "${OPTIMIZATION_LEVELS[@]}"; do
         optimization_level="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 1p)"
         makefile_target="$(echo "$optimization_level_item" | sed "s/|/\n/g" | sed -n 2p)"
-        BUILD_UUID="$compiler_UI_name-$dependency-$optimization_level"
+        BUILD_UUID="$compiler_UI_name-$(echo $dependency | sed "s/USE_//g")-$optimization_level"
         BUILD_DIR="builds/$BUILD_UUID"
 
-	# I'm proud of myself
-	module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
+	    module unload $(module list 2>&1 | sed -n 3p | sed "s/[0-9])//g")
         module load   $modules
 
         echo -en "Building $BUILD_DIR..."
@@ -102,28 +107,39 @@ for item in "${NAMING_IS_FUN[@]}"; do
 
         cd "$BUILD_DIR"
 
+        chmod +x ./clover_leaf
+
+        RANKS_AND_THREAD=("1 $(nproc)")
+
+        if [ "$dependency" == "USE_OPENMP" ]; then
+            RANKS_AND_THREAD+=("$(nproc) 1")
+        fi
+
         for ntilespc in "${TILES_PER_CHUNK_OPTIONS[@]}"; do
-            RUN_UUID="$BUILD_UUID-$ntilespc""tpc"
+            for rank_and_thread in "${RANKS_AND_THREAD[@]}"; do
+                mpi_ranks=$(echo "$rank_and_thread" | sed "s/\ /\n/g" | sed -n 1p)
+                mp_threads=$(echo "$rank_and_thread" | sed "s/\ /\n/g" | sed -n 2p)
 
-            echo -en "\rRunning $RUN_UUID..."
+                RUN_UUID="$BUILD_UUID-$ntilespc""tpc-$mpi_ranks""mpi-$mp_threads""mp"
 
-            # Q: How are you going to document this?
-            # A: Yes.
-            echo "$IN_FILE_TEMPLATE" |              \
-                sed s/"\^"/$ntilespc/g > clover.in
+                echo -en "\rRunning $RUN_UUID..."
 
-            chmod +x ./clover_leaf
+                # Q: How are you going to document this?
+                # A: Yes.
+                echo "$IN_FILE_TEMPLATE" |             \
+                    sed s/"\^"/$ntilespc/g > clover.in
 
-            # I love finding undocumented features (OCL_SRC_PREFIX)
-            export OMP_NUM_THREADS=$(nproc)
-            export OCL_SRC_PREFIX="../../"
+                # I love finding undocumented features (OCL_SRC_PREFIX)
+                export OMP_NUM_THREADS=$mp_threads
+                export OCL_SRC_PREFIX="../../"
 
-            mpirun -v -n 1 -bind-to none  \
-                   ./clover_leaf   2>&1 | \
-                   tail -22               \
-                   > "../../results/run-$RUN_UUID.log"
+                mpirun -v -n $mpi_ranks -bind-to none  \
+                    ./clover_leaf   2>&1 | \
+                    tail -22               \
+                    > "../../results/run-$RUN_UUID.log"
 
-            rm clover.in clover.out
+                rm clover.in clover.out
+            done
         done
 
         echo -e "\rDone with $BUILD_UUID.                                        "
