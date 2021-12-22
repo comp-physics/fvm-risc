@@ -64,7 +64,7 @@ _Update:_ some references specific to **MFC** [are here](mfc.md)
 Cloverleaf has been selected as option 1, in particular the Cpp port from the Bistol HPC group. 
 More documentation [here](clover.md)** 
 
-## Step 1.5: Document them (STATUS: Mostly complete)
+## Step 1.5: Document them (STATUS: COMPLETE)
 
 Document
 * what each benchmark is capable of
@@ -86,7 +86,7 @@ It looks like Hyesoon's students are also going to be running the code themselve
 According to Jeff Young the ARM computer should have a few different compiler options, including gcc and Cray at the very least.
 Please ping the Slack channel on novel arch. if you have questions.**
 
-## Step 3: Optimization (STATUS: Pending)
+## Step 3: Optimization (STATUS: COMPLETE)
 
 General
 * Identify optimization opportunities for the different codes
