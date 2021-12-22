@@ -36,7 +36,7 @@ _Update:_ some references specific to **MFC** [are here](mfc.md)
     * Optimization: Meaning tiling, and other algorithmic optimizations one might make for a given architecture, or just in genereal
 
 
-## Step 1: Identify benchmarks (STATUS: Complete)
+## Step 1: Identify benchmarks (STATUS: COMPLETE)
 
 * Need to identify codebases that we will use for benchmarking/testing (one or two or three), "mini-apps" are often good for this
   * Some examples in MSTeams message
@@ -74,7 +74,7 @@ Document
 
 **Update: Cloverleaf documentation [here](clover.md)** 
 
-## Step 2: Run (STATUS: Pending)
+## Step 2: Run (STATUS: COMPLETE)
 
 * Run each benchmark and each method within each benchmark using appropriate compilers on different hardware 
   * Intel CPU gets Intel compiler, for example
